@@ -2,7 +2,7 @@
   <b-navbar transparent shadow active>
     <template #brand>
       <b-navbar-item tag="router-link" :to="{ name: 'home' }" class="p-0">
-        <img src="../assets/dog.png" alt="psina" width="50" height="50" />
+        <img src="../assets/dog.png" alt="psina" />
       </b-navbar-item>
     </template>
     <template #start>
