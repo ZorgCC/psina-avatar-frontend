@@ -1,0 +1,11 @@
+@import "~bulma/sass/utilities/_all";
+
+$navbar-item-hover-color: orange;
+$navbar-height: 4.5rem;
+$navbar-item-img-max-height: 4rem;
+$input-focus-border-color: orange;
+$button-focus-border-color: orange;
+$button-hover-border-color: orange;
+
+@import "~bulma";
+@import "~buefy/src/scss/buefy";
