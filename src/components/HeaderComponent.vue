@@ -7,6 +7,7 @@
     </template>
     <template #start>
       <b-navbar-item
+        v-if="isAuth"
         class="is-link"
         exact-active-class="home-active"
         tag="router-link"
@@ -37,20 +38,16 @@
       <b-navbar-item tag="div">
         <div class="buttons">
           <router-link
-            class="button is-light has-background-white is-rounded"
+            v-if="isAuth"
+            class="button is-light is-rounded"
+            active-class="home-active"
             :to="{ name: 'settings' }"
           >
-            <!-- TODO create route setting -->
-            <b-icon
-              :class="{ 'home-active': isAuth }"
-              class="settings-hover"
-              icon="cog"
-            ></b-icon>
+            <b-icon icon="cog"></b-icon>
           </router-link>
           <b-button
             v-if="isAuth"
             class="button is-light is-rounded"
-            active-class="login-active"
             @click="isAuth = false"
           >
             Log out
@@ -73,19 +70,16 @@ export default {
   name: 'HeaderComponent',
   data() {
     return {
-      isAuth: false,
+      isAuth: true,
     }
   },
 }
 </script>
 <style lang="scss" scoped>
 .home-active {
-  color: orange;
+  color: orange !important;
 }
 .login-active {
   border-color: orange !important;
-}
-.settings-hover:hover {
-  color: orange;
 }
 </style>
