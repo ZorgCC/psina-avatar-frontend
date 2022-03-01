@@ -18,9 +18,10 @@
                 <span class="has-text-grey">Username</span>
               </template>
               <b-input
+                v-model="username"
                 rounded
                 icon="account"
-                value="johnsilver"
+                placeholder="username"
                 @focus="isValid = true"
               ></b-input>
             </b-field>
@@ -32,10 +33,11 @@
                 <span class="has-text-grey">Password</span>
               </template>
               <b-input
+                v-model="password"
                 rounded
                 icon="lock"
                 value="123"
-                type="password"
+                placeholder="password"
                 @focus="isValid = true"
               ></b-input>
             </b-field>
@@ -44,7 +46,8 @@
                 class="m-0"
                 rounded
                 onclick="this.blur()"
-                @click.prevent="isValid = !isValid"
+                type="submit"
+                @click.prevent="handleSubmit"
               >
                 Log in
               </b-button>
@@ -62,7 +65,36 @@ export default {
   data() {
     return {
       isValid: true,
+      username: null,
+      password: null,
     }
+  },
+  methods: {
+    handleSubmit() {
+      this.$emit('loggedIn') // TODO убрать
+      if (this.password.length > 0 && this.username.length > 0) {
+        this.$http
+          .post('https://avatars.zorg.cc/api/login', {
+            username: this.username,
+            password: this.password,
+          })
+          .then((response) => {
+            // localStorage.setItem('user', JSON.stringify(response.data.user))
+            localStorage.setItem('jwt', response.data.jwt_token)
+            if (localStorage.getItem('jwt') != null) {
+              this.$emit('loggedIn')
+              if (this.$route.params.nextUrl != null) {
+                this.$router.push(this.$route.params.nextUrl)
+              } else {
+                this.$router.push('home')
+              }
+            }
+          })
+          .catch(function (error) {
+            console.error(error.response)
+          })
+      }
+    },
   },
 }
 </script>

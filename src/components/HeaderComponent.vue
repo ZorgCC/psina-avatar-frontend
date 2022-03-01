@@ -7,7 +7,7 @@
     </template>
     <template #start>
       <b-navbar-item
-        v-if="isAuth"
+        v-if="auth"
         class="is-link"
         exact-active-class="home-active"
         tag="router-link"
@@ -38,7 +38,7 @@
       <b-navbar-item tag="div">
         <div class="buttons">
           <router-link
-            v-if="isAuth"
+            v-if="auth"
             class="button is-light is-rounded"
             active-class="home-active"
             :to="{ name: 'settings' }"
@@ -46,9 +46,9 @@
             <b-icon icon="cog"></b-icon>
           </router-link>
           <b-button
-            v-if="isAuth"
+            v-if="auth"
             class="button is-light is-rounded"
-            @click="isAuth = false"
+            @click="$emit('logOut')"
           >
             Log out
           </b-button>
@@ -68,10 +68,11 @@
 <script>
 export default {
   name: 'HeaderComponent',
+  props: {
+    auth: Boolean,
+  },
   data() {
-    return {
-      isAuth: true,
-    }
+    return {}
   },
 }
 </script>
