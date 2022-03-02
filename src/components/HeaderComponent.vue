@@ -36,6 +36,9 @@
 
     <template #end>
       <b-navbar-item tag="div">
+        <p v-if="auth" class="mx-2 has-text-grey">
+          {{ user.username }}
+        </p>
         <div class="buttons">
           <router-link
             v-if="auth"
@@ -48,7 +51,7 @@
           <b-button
             v-if="auth"
             class="button is-light is-rounded"
-            @click="$emit('logOut')"
+            @click="loggedOut"
           >
             Log out
           </b-button>
@@ -70,9 +73,22 @@ export default {
   name: 'HeaderComponent',
   props: {
     auth: Boolean,
+    user: {
+      type: [String, Object],
+    },
   },
   data() {
     return {}
+  },
+  methods: {
+    loggedOut() {
+      localStorage.removeItem('jwt')
+      localStorage.removeItem('user')
+      if (localStorage.getItem('jwt') == null) {
+        this.$emit('checkAuth')
+        this.$router.push('login')
+      }
+    },
   },
 }
 </script>

@@ -65,34 +65,37 @@ export default {
   data() {
     return {
       isValid: true,
-      username: null,
-      password: null,
+      username: '',
+      password: '',
     }
   },
   methods: {
-    handleSubmit() {
-      this.$emit('loggedIn') // TODO убрать
+    async handleSubmit() {
+      let vm = this
       if (this.password.length > 0 && this.username.length > 0) {
-        this.$http
-          .post('https://avatars.zorg.cc/api/login', {
+        await this.$http
+          .post('login', {
             username: this.username,
             password: this.password,
           })
           .then((response) => {
-            // localStorage.setItem('user', JSON.stringify(response.data.user))
             localStorage.setItem('jwt', response.data.jwt_token)
             if (localStorage.getItem('jwt') != null) {
-              this.$emit('loggedIn')
-              if (this.$route.params.nextUrl != null) {
-                this.$router.push(this.$route.params.nextUrl)
+              // this.$emit('loggedIn')
+              this.$emit('checkAuth')
+              if (this.$route.query.nextUrl != null) {
+                this.$router.push({ path: `${this.$route.query.nextUrl}` })
               } else {
-                this.$router.push('home')
+                this.$router.push({ name: 'home' })
               }
             }
           })
           .catch(function (error) {
+            vm.isValid = false
             console.error(error.response)
           })
+      } else {
+        this.isValid = false
       }
     },
   },
