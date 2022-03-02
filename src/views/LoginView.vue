@@ -47,6 +47,7 @@
                 rounded
                 onclick="this.blur()"
                 type="submit"
+                :disabled="password.length < 1 || username.length < 1"
                 @click.prevent="handleSubmit"
               >
                 Log in
