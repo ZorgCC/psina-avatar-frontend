@@ -36,7 +36,7 @@
                 v-model="password"
                 rounded
                 icon="lock"
-                value="123"
+                type="password"
                 placeholder="password"
                 @focus="isValid = true"
               ></b-input>
