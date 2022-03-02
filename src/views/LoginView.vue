@@ -82,7 +82,6 @@ export default {
           .then((response) => {
             localStorage.setItem('jwt', response.data.jwt_token)
             if (localStorage.getItem('jwt') != null) {
-              // this.$emit('loggedIn')
               this.$emit('checkAuth')
               if (this.$route.query.nextUrl != null) {
                 this.$router.push({ path: `${this.$route.query.nextUrl}` })

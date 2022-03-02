@@ -51,7 +51,7 @@
           <b-button
             v-if="auth"
             class="button is-light is-rounded"
-            @click="loggedOut"
+            @click="$emit('loggedOut')"
           >
             Log out
           </b-button>
@@ -79,16 +79,6 @@ export default {
   },
   data() {
     return {}
-  },
-  methods: {
-    loggedOut() {
-      localStorage.removeItem('jwt')
-      localStorage.removeItem('user')
-      if (localStorage.getItem('jwt') == null) {
-        this.$emit('checkAuth')
-        this.$router.push('login')
-      }
-    },
   },
 }
 </script>
