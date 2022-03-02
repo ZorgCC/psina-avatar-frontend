@@ -18,9 +18,10 @@
                 <span class="has-text-grey">Username</span>
               </template>
               <b-input
+                v-model="username"
                 rounded
                 icon="account"
-                value="johnsilver"
+                placeholder="username"
                 @focus="isValid = true"
               ></b-input>
             </b-field>
@@ -32,10 +33,11 @@
                 <span class="has-text-grey">Password</span>
               </template>
               <b-input
+                v-model="password"
                 rounded
                 icon="lock"
                 value="123"
-                type="password"
+                placeholder="password"
                 @focus="isValid = true"
               ></b-input>
             </b-field>
@@ -44,7 +46,8 @@
                 class="m-0"
                 rounded
                 onclick="this.blur()"
-                @click.prevent="isValid = !isValid"
+                type="submit"
+                @click.prevent="handleSubmit"
               >
                 Log in
               </b-button>
@@ -62,7 +65,39 @@ export default {
   data() {
     return {
       isValid: true,
+      username: '',
+      password: '',
     }
+  },
+  methods: {
+    async handleSubmit() {
+      let vm = this
+      if (this.password.length > 0 && this.username.length > 0) {
+        await this.$http
+          .post('login', {
+            username: this.username,
+            password: this.password,
+          })
+          .then((response) => {
+            localStorage.setItem('jwt', response.data.jwt_token)
+            if (localStorage.getItem('jwt') != null) {
+              // this.$emit('loggedIn')
+              this.$emit('checkAuth')
+              if (this.$route.query.nextUrl != null) {
+                this.$router.push({ path: `${this.$route.query.nextUrl}` })
+              } else {
+                this.$router.push({ name: 'home' })
+              }
+            }
+          })
+          .catch(function (error) {
+            vm.isValid = false
+            console.error(error.response)
+          })
+      } else {
+        this.isValid = false
+      }
+    },
   },
 }
 </script>

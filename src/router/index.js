@@ -8,16 +8,25 @@ const routes = [
     path: '/',
     name: 'home',
     component: () => import('../views/HomeView'),
+    meta: {
+      requiresAuth: true,
+    },
   },
   {
     path: '/login',
     name: 'login',
     component: () => import('../views/LoginView.vue'),
+    meta: {
+      guest: true,
+    },
   },
   {
     path: '/settings',
     name: 'settings',
     component: () => import('../views/SettingsView.vue'),
+    meta: {
+      requiresAuth: true,
+    },
   },
 ]
 
@@ -25,9 +34,25 @@ const router = new VueRouter({
   routes,
 })
 
-// router.beforeEach((to, from, next) => {
-//   if (to.name !== 'login') next({ name: 'login' })
-//   else next()
-// })
+router.beforeEach((to, from, next) => {
+  if (to.matched.some((record) => record.meta.requiresAuth)) {
+    if (localStorage.getItem('jwt') == null) {
+      next({
+        name: 'login',
+        query: { nextUrl: to.fullPath },
+      })
+    } else {
+      next()
+    }
+  } else if (to.matched.some((record) => record.meta.guest)) {
+    if (localStorage.getItem('jwt') == null) {
+      next()
+    } else {
+      next({ name: 'home' })
+    }
+  } else {
+    next()
+  }
+})
 
 export default router

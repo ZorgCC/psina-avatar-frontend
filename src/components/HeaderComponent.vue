@@ -7,7 +7,7 @@
     </template>
     <template #start>
       <b-navbar-item
-        v-if="isAuth"
+        v-if="auth"
         class="is-link"
         exact-active-class="home-active"
         tag="router-link"
@@ -36,9 +36,12 @@
 
     <template #end>
       <b-navbar-item tag="div">
+        <p v-if="auth" class="mx-2 has-text-grey">
+          {{ user.username }}
+        </p>
         <div class="buttons">
           <router-link
-            v-if="isAuth"
+            v-if="auth"
             class="button is-light is-rounded"
             active-class="home-active"
             :to="{ name: 'settings' }"
@@ -46,9 +49,9 @@
             <b-icon icon="cog"></b-icon>
           </router-link>
           <b-button
-            v-if="isAuth"
+            v-if="auth"
             class="button is-light is-rounded"
-            @click="isAuth = false"
+            @click="loggedOut"
           >
             Log out
           </b-button>
@@ -68,10 +71,24 @@
 <script>
 export default {
   name: 'HeaderComponent',
+  props: {
+    auth: Boolean,
+    user: {
+      type: [String, Object],
+    },
+  },
   data() {
-    return {
-      isAuth: true,
-    }
+    return {}
+  },
+  methods: {
+    loggedOut() {
+      localStorage.removeItem('jwt')
+      localStorage.removeItem('user')
+      if (localStorage.getItem('jwt') == null) {
+        this.$emit('checkAuth')
+        this.$router.push('login')
+      }
+    },
   },
 }
 </script>
